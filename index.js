@@ -11,62 +11,59 @@ $("body").css("margin", 0)
 $("body").css("overflow", "hidden")
 
 
-CreateMaurerRose(5, 97, canvas.height / 3)
+CreateMaurerRose(5, 97, canvas.height * .4)
 
 
 function CreateMaurerRose(n, d, size) {
 
-    var counter = 1
+    var counter = 0
     var pointsFirstPath = []
     var pointsSecondPath = []
 
-    for (var i = 0; i < 2 * Math.PI; i += Math.PI / 360) {
+    for (var i = 0; i < 2 * Math.PI; i += Math.PI / 720) {
 
-        //draw first path
-        var k = i //* d
-        var r = Math.sin(n * k) * size
-        var x = canvas.width / 2 + r * Math.cos(k)
-        var y = canvas.height / 2 + r * Math.sin(k)
+        var k1 = i
+        var k2 = i * d
+        var r1 = Math.sin(n * k1) * size
+        var r2 = Math.sin(n * k2) * size
+        
+        var x1 = canvas.width / 2 + r1 * Math.cos(k1)
+        var y1 = canvas.height / 2 + r1 * Math.sin(k1)
 
-        pointsFirstPath.push({ x: x, y: y })
+        pointsFirstPath.push({ x: x1, y: y1 })
 
-        //draw second path
-        var k = i * d
-        var r = Math.sin(n * k) * size
-        var x = canvas.width / 2 + r * Math.cos(k)
-        var y = canvas.height / 2 + r * Math.sin(k)
+        var x2 = canvas.width / 2 + r2 * Math.cos(k2)
+        var y2 = canvas.height / 2 + r2 * Math.sin(k2)
 
-
-        pointsSecondPath.push({ x: x, y: y })
+        pointsSecondPath.push({ x: x2, y: y2 })
 
     }
 
     function DrawMaurerrose() {
 
-
-        if(counter === pointsFirstPath.length) {
-
-            console.log("we are done")
-            return
-        }
-
         c.beginPath()
         c.strokeStyle = "rgba(255,255,0,.5)"
         c.lineWidth = 5
-        c.moveTo(pointsFirstPath[counter - 1].x, pointsFirstPath[counter - 1].y)
-        c.lineTo(pointsFirstPath[counter].x, pointsFirstPath[counter].y)
+        c.moveTo(pointsFirstPath[counter].x, pointsFirstPath[counter].y)
+        c.lineTo(pointsFirstPath[counter+1].x, pointsFirstPath[counter+1].y)
         c.stroke()
         c.closePath()
 
         c.beginPath()
         c.strokeStyle = "rgba(255,255,255,.3)"
         c.lineWidth = 1
-        c.moveTo(pointsSecondPath[counter - 1].x, pointsSecondPath[counter - 1].y)
-        c.lineTo(pointsSecondPath[counter].x, pointsSecondPath[counter].y)
+        c.moveTo(pointsSecondPath[counter].x, pointsSecondPath[counter].y)
+        c.lineTo(pointsSecondPath[counter+1].x, pointsSecondPath[counter+1].y)
         c.stroke()
         c.closePath()
 
         counter++
+
+        if(counter === pointsSecondPath.length) {
+
+            console.log("we are done")
+            return
+        }
 
         requestAnimationFrame(DrawMaurerrose)
     }
